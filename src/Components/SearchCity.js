@@ -1,31 +1,29 @@
 import React, { useCallback, useState } from 'react';
 import { Button, TextField, } from '@shopify/polaris';
 import { getCity } from './server';
-import { useDispatch } from 'react-redux';
-import { getCityStore } from '../redux/action';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCityStore, installFavoritesStatus, showLoader } from '../redux/action';
 
-export const SearchCity = ({favorites, setFavorites}) => {
-
+export const SearchCity = () => {
+	const cities = useSelector(state => state.app.cities);
 	const [textFieldValue, setTextFieldValue] = useState('');
 	const dispatch = useDispatch()
 
-	// useEffect(() => {
-	// 	localStorage.setItem('cityes', JSON.stringify(searchResult));
-	// }, [searchResult])
-
-
-	const handleClick = () => {
+	const handleClick = (e) => {
+		if (textFieldValue === '') return;
+		let city = cities.find(item => item.label.toUpperCase() === textFieldValue.toUpperCase());
+		dispatch(showLoader(true))
 		getCity(textFieldValue)
 		.then(res => {
 			dispatch(getCityStore(res))
+			if (city) dispatch(installFavoritesStatus(true))
+			else dispatch(installFavoritesStatus(false))
 			setTextFieldValue('')
 		})
-		// .then(res => {
-			
-		// 	setSearchResult(searchResult => ({...searchResult, [res.id]: res.name}))
-			
-		// })
 		.catch(er => console.log(er))
+		.finally(() => {
+			dispatch(showLoader(false))
+		})
 	}
   
 	const handleTextFieldChange = useCallback(
@@ -33,7 +31,6 @@ export const SearchCity = ({favorites, setFavorites}) => {
 		[],
 	);
   
-	// const handleClearButtonClick = useCallback(() => setTextFieldValue(''), []);
   
 	return (
 		<div className="Control">
@@ -41,9 +38,6 @@ export const SearchCity = ({favorites, setFavorites}) => {
 				label="Поиск города"
 				value={textFieldValue}
 				onChange={handleTextFieldChange}
-				// clearButton
-				// onClearButtonClick={handleClearButtonClick}
-				
 			/>
 			<Button onClick={handleClick}>Поиск</Button>
 		</div>

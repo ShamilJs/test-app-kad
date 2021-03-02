@@ -1,28 +1,38 @@
 import React, { useEffect, useState } from 'react';
 import { Card, OptionList } from '@shopify/polaris';
+import { useDispatch, useSelector } from 'react-redux';
+import { getCity } from './server';
+import { getCityStore, installFavoritesStatus, showLoader } from '../redux/action';
 
-export const ListCity = ({favorites, setFavorites}) => {
+export const ListCity = () => {
 	const [selected, setSelected] = useState([]);
-    const arr = []
-    
-    useEffect(() => {
-        
-        for(let key in favorites) {
-            arr.push({value: favorites[key], label: favorites[key]})
-          }
-    }, [favorites])
-    // const localUser = JSON.parse(localStorage.getItem('city'));
-  
+	const cities = useSelector(state => state.app.cities);
+	const dispatch = useDispatch()
+
+	useEffect(() => {
+		if (!selected.length) return
+		dispatch(showLoader(true))
+		getCity(selected.join(''))
+		.then(res => {
+			dispatch(getCityStore(res))
+			dispatch(installFavoritesStatus(true))
+		})
+		.catch(er => console.log(er))
+		.finally(() => {
+			dispatch(showLoader(false))
+		})
+		// eslint-disable-next-line
+	}, [selected])
+ 
 	return (
-	  <Card>
-		<OptionList
-		  title="Избранные города"
-		  onChange={setSelected}
-          options={arr}
-		  selected={selected}
-		  onChange={(sel) => console.log(sel)}
-		/>
-	  </Card>
+		<Card>
+			<OptionList
+				title="Избранные города"
+				onChange={setSelected}
+				options={cities}
+				selected={selected}
+			/>
+		</Card>
 	);
   }
 
