@@ -1,4 +1,5 @@
 import { ADD_FAVORITES_CITY,
+    ERROR_ACTION,
 	GET_CITY,
 	INSTALL_FAVORITES_STATUS,
 	SHOW_ALERT, SHOW_LOADER } from "./types";
@@ -35,6 +36,13 @@ export const showLoader = (status) => {
 export const showAlert = (status) => {
     return {
 		type: SHOW_ALERT,
+		payload: status
+    };
+};
+
+export const showError = (status) => {
+    return {
+		type: ERROR_ACTION,
 		payload: status
     };
 };

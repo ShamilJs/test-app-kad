@@ -1,58 +1,35 @@
-import { DisplayText, Heading, TextContainer} from '@shopify/polaris';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import './App.css';
 import { ListCity } from './Components/ListCity';
 import { SearchCity } from './Components/SearchCity';
-import { addFavoritesCity, getCityStore, showLoader } from './redux/action';
-import { getCity } from '././Components/server';
+import { getCityStore, showError, showLoader } from './redux/action';
+import { getCityGeolocation } from '././Components/server';
+import { CardWeather } from './Components/CardWeather';
+import './App.css';
+
 
 export const App = () => {
-	const city = useSelector(state => state?.app?.city);
 	const favorites = useSelector(state => state.app.favorites);
-	const cities = useSelector(state => state.app.cities);
-	const dispatch = useDispatch()
+
+    const dispatch = useDispatch()
 
 	useEffect(() => {
 		dispatch(showLoader(true))
-		getCity('Томск')
-		.then(res => {
-			dispatch(getCityStore(res))
-		})
-		.catch(er => console.log(er))
-		.finally(() => {
-			dispatch(showLoader(false))
-		})
+		dispatch(showError(false))
+		navigator.geolocation.getCurrentPosition(pos => {
+			getCityGeolocation(pos.coords.longitude, pos.coords.latitude)
+			.then(res => dispatch(getCityStore(res)))
+			.catch(() => dispatch(showError(true)))
+			.finally(() => dispatch(showLoader(false)))
+		}, error => console.log("Пожалуйста, разрешите доступ к использованию Вашей геопозиции!"));
 		// eslint-disable-next-line
 	}, [])
 
-	const handleClick = () => {
-		dispatch(addFavoritesCity(city.name))
-		localStorage.setItem('cityes', JSON.stringify(cities))
-	}
 
 	return (
 		<div className="app">
 			<div className="container">
-				<div className="card-weather">
-					<TextContainer>
-						<div className="card-weather-title">
-							<Heading>Погода в городе {city?.name}</Heading>
-							<img
-								src="./21.png"
-								alt="21"
-								onClick={handleClick}
-								className={favorites ? 'hover-img' : ''}
-							/>
-						</div>
-						<DisplayText size="extraLarge" element="p">{city?.name}</DisplayText>
-						<DisplayText size="extraLarge" element="p">{city.main?.temp} &deg;C</DisplayText><br/><br/><br/>
-						<DisplayText size="Small" element="p">Давление: {city.main?.pressure} мм.рт.ст</DisplayText>
-						{city.weather?.map((item, i) => (
-							<DisplayText key={i} size="Small" element="p">Осадки: {item.description}</DisplayText>
-						))}
-					</TextContainer>
-				</div>
+				<CardWeather favorites={favorites}/>
 				<div className="search-weather">
 					<SearchCity />
 					<ListCity />

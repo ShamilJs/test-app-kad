@@ -2,22 +2,27 @@ import React, { useEffect, useState } from 'react';
 import { Card, OptionList } from '@shopify/polaris';
 import { useDispatch, useSelector } from 'react-redux';
 import { getCity } from './server';
-import { getCityStore, installFavoritesStatus, showLoader } from '../redux/action';
+import {
+	getCityStore,
+	installFavoritesStatus,
+	showError,
+	showLoader } from '../redux/action';
 
 export const ListCity = () => {
 	const [selected, setSelected] = useState([]);
-	const cities = useSelector(state => state.app.cities);
+	const cities = useSelector(state => state?.app?.cities);
 	const dispatch = useDispatch()
 
 	useEffect(() => {
 		if (!selected.length) return
 		dispatch(showLoader(true))
+		dispatch(showError(false))
 		getCity(selected.join(''))
 		.then(res => {
 			dispatch(getCityStore(res))
 			dispatch(installFavoritesStatus(true))
 		})
-		.catch(er => console.log(er))
+		.catch(() => dispatch(showError(true)))
 		.finally(() => {
 			dispatch(showLoader(false))
 		})

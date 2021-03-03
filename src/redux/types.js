@@ -7,3 +7,5 @@ export const INSTALL_FAVORITES_STATUS = 'INSTALL_FAVORITES_STATUS';
 export const SHOW_LOADER = 'SHOW_LOADER';
 
 export const SHOW_ALERT = 'SHOW_ALERT';
+
+export const ERROR_ACTION = 'ERROR_ACTION';
