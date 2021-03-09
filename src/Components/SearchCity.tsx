@@ -8,16 +8,19 @@ import {
 	showLoader,
 	showAlert, 
 	showError} from '../redux/action';
+import { CityAndLabelType, StateType } from './types/types';
 
-export const SearchCity = () => {
-	const cities = useSelector(state => state.app.cities);
-	const negativeSearch = useSelector(state => state.app.alert);
+
+
+export const SearchCity: React.FC = () => {
+	const cities = useSelector((state: StateType) => state.app.cities);
+	const negativeSearch = useSelector((state: StateType) => state.app.alert);
 	const [textFieldValue, setTextFieldValue] = useState('');
 	const dispatch = useDispatch()
 
-	const handleClick = (e) => {
+	const handleClick = (): void => {
 		if (textFieldValue === '') return;
-		let city = cities.find(item => item.label.toUpperCase() === textFieldValue.toUpperCase());
+		let city = cities.find((item: CityAndLabelType) => item.label.toUpperCase() === textFieldValue.toUpperCase());
 		dispatch(showLoader(true))
 		dispatch(showError(false))
 		getCity(textFieldValue)

@@ -9,16 +9,22 @@ import {
 	TextContainer,
 	TextStyle,
 	Tooltip } from '@shopify/polaris';
+import { StateType } from './types/types';
 
-export const CardWeather = ({ favorites }) => {
-    const city = useSelector(state => state?.app?.city);
-	const cities = useSelector(state => state.app.cities);
-    const loader = useSelector(state => state.app.loader);
-    const err = useSelector(state => state.app.error);
+
+interface TargetProps {
+	favorites: boolean,
+}
+
+export const CardWeather: React.FC<TargetProps> = ({ favorites }) => {
+    const city = useSelector((state: StateType) => state?.app?.city);
+	const cities = useSelector((state: StateType) => state.app.cities);
+    const loader = useSelector((state: StateType) => state.app.loader);
+    const err = useSelector((state: StateType) => state.app.error);
     const dispatch = useDispatch()
 
     const handleClick = () => {
-		dispatch(addFavoritesCity(city.name))
+		dispatch(addFavoritesCity(city!.name!))
 		localStorage.setItem('cityes', JSON.stringify(cities))
 	}
 
@@ -58,9 +64,9 @@ export const CardWeather = ({ favorites }) => {
                     </div>
                     <DisplayText size="extraLarge" element="p"> {city?.name}</DisplayText>
                     <DisplayText size="extraLarge" element="p">{city.main?.temp} &deg;C</DisplayText><br/><br/><br/>
-                    <DisplayText size="Small" element="p">Давление: {city.main?.pressure} мм.рт.ст</DisplayText>
-                    {city.weather?.map((item, i) => (
-                        <DisplayText key={i} size="Small" element="p">Осадки: {item.description}</DisplayText>
+                    <DisplayText size="small" element="p">Давление: {city.main?.pressure} мм.рт.ст</DisplayText>
+                    {city.weather?.map((item: any, i: number) => (
+                        <DisplayText key={i} size="small" element="p">Осадки: {item.description}</DisplayText>
                     ))}
                 </TextContainer>
             }

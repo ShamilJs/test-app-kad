@@ -3,13 +3,14 @@ import { useDispatch, useSelector } from 'react-redux';
 import { ListCity } from './Components/ListCity';
 import { SearchCity } from './Components/SearchCity';
 import { getCityStore, showError, showLoader } from './redux/action';
-import { getCityGeolocation } from '././Components/server';
+import { getCityGeolocation } from './Components/server';
 import { CardWeather } from './Components/CardWeather';
 import './App.css';
+import { StateType } from './Components/types/types';
 
 
-export const App = () => {
-	const favorites = useSelector(state => state.app.favorites);
+export const App: React.FC = () => {
+	const favorites = useSelector((state: StateType) => state.app.favorites);
 
     const dispatch = useDispatch()
 

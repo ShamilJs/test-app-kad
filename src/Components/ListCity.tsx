@@ -7,10 +7,13 @@ import {
 	installFavoritesStatus,
 	showError,
 	showLoader } from '../redux/action';
+import { StateType } from './types/types';
 
-export const ListCity = () => {
-	const [selected, setSelected] = useState([]);
-	const cities = useSelector(state => state?.app?.cities);
+
+	
+export const ListCity: React.FC = () => {
+	const [selected, setSelected] = useState<Array<string>>([]);
+	const cities = useSelector((state: StateType) => state?.app?.cities);
 	const dispatch = useDispatch()
 
 	useEffect(() => {
