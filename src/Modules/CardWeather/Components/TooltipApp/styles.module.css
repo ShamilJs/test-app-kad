@@ -1,0 +1,11 @@
+.root{
+	position: absolute;
+	top: 20px;
+	right: -10px;
+}
+.hoverImg{
+	filter: invert(100%);
+	transition-duration: 500ms;
+	background-color: #b74f99;
+}
+  

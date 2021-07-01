@@ -1,16 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
-import { App } from './App';
-import { compose, createStore } from 'redux';
-import { rootReducer } from './redux/rootReducer';
+import { applyMiddleware, createStore } from 'redux';
 import { Provider } from 'react-redux';
 import enTranslations from '@shopify/polaris/locales/en.json';
-import {AppProvider} from '@shopify/polaris';
+import { AppProvider } from '@shopify/polaris';
+import thunk from 'redux-thunk';
 
-const store = createStore(rootReducer, compose(
-	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
-));
+import { rootReducer } from './Stores/rootReducer';
+
+import { App } from './App';
+
+import './index.css';
+
+const store = createStore(rootReducer, applyMiddleware(thunk));
 
 const app = (
 	<Provider store={store}>
@@ -20,7 +22,4 @@ const app = (
 	</Provider>
 );
 
-ReactDOM.render(
-  app,
-  document.getElementById('root')
-);
+ReactDOM.render(app, document.getElementById('root'));

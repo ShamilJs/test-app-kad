@@ -1,0 +1,16 @@
+.root{
+	margin-bottom: 40px;
+}
+.control{
+	display: flex;
+	align-items:flex-end;
+	justify-content: center;
+	width: 100%;
+	margin-bottom: 20px;
+}
+.control button{
+	height: 50px;
+}
+.control input{
+	width: 500px;
+}
